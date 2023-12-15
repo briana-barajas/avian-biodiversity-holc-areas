@@ -267,10 +267,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <details>
 <summary>View Code</summary>
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co">#check for NAs, they'll  be removed during filter &amp; will affect total </span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(<span class="fu">is.na</span>(los_angeles<span class="sc">$</span>LOWINCPCT))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>glue<span class="sc">::</span><span class="fu">glue</span>(<span class="st">'Number of NAs: {sum(is.na(los_angeles$LOWINCPCT))}'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 0</code></pre>
+<pre><code>Number of NAs: 0</code></pre>
 </div>
 <details>
 <summary>View Code</summary>
@@ -279,10 +279,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(LOWINCPCT <span class="sc">&lt;</span> <span class="fl">0.05</span>)</span>
 <span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="co"># No NAs, so can divide by total number of rows to find </span></span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(low_income)<span class="sc">/</span><span class="fu">nrow</span>(los_angeles) <span class="sc">*</span><span class="dv">100</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>glue<span class="sc">::</span><span class="fu">glue</span>(<span class="st">'5% or less of population is low income: {nrow(low_income)/nrow(los_angeles) *100}'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 6.114398</code></pre>
+<pre><code>5% or less of population is low income: 6.11439842209073</code></pre>
 </div>
 </div>
 <p>Based on this calculation, in Los Angeles, less than 5% of the population is considered low-income in 6.11% of census block groups.</p>
@@ -302,10 +302,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(P_PM25 <span class="sc">&gt;</span> <span class="dv">80</span> <span class="sc">&amp;</span> P_PNPL <span class="sc">&gt;</span> <span class="dv">80</span>)</span>
 <span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a><span class="co"># calculate percentage</span></span>
-<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(pm_pnpl_subset)<span class="sc">/</span>total2 <span class="sc">*</span> <span class="dv">100</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>glue<span class="sc">::</span><span class="fu">glue</span>(<span class="st">'Percent census block groups with P_PM25 and P_PNPL above 80th percentile: {nrow(pm_pnpl_subset)/total2 * 100}'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 17.39924</code></pre>
+<pre><code>Percent census block groups with P_PM25 and P_PNPL above 80th percentile: 17.3992395437262</code></pre>
 </div>
 </div>
 <p>In Los Angeles, 17.4% of census block groups are above the 80th percentile for Particulate Matter 2.5 AND Superfund proximity.</p>
@@ -389,23 +389,23 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </details>
 <div class="cell-output-display">
 
-<div id="skseiycdoj" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#skseiycdoj table {
+<div id="nndsfkpxlo" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#nndsfkpxlo table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#skseiycdoj thead, #skseiycdoj tbody, #skseiycdoj tfoot, #skseiycdoj tr, #skseiycdoj td, #skseiycdoj th {
+#nndsfkpxlo thead, #nndsfkpxlo tbody, #nndsfkpxlo tfoot, #nndsfkpxlo tr, #nndsfkpxlo td, #nndsfkpxlo th {
   border-style: none;
 }
 
-#skseiycdoj p {
+#nndsfkpxlo p {
   margin: 0;
   padding: 0;
 }
 
-#skseiycdoj .gt_table {
+#nndsfkpxlo .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -431,12 +431,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   border-left-color: #D3D3D3;
 }
 
-#skseiycdoj .gt_caption {
+#nndsfkpxlo .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#skseiycdoj .gt_title {
+#nndsfkpxlo .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -448,7 +448,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   border-bottom-width: 0;
 }
 
-#skseiycdoj .gt_subtitle {
+#nndsfkpxlo .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -460,7 +460,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   border-top-width: 0;
 }
 
-#skseiycdoj .gt_heading {
+#nndsfkpxlo .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -472,13 +472,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   border-right-color: #D3D3D3;
 }
 
-#skseiycdoj .gt_bottom_border {
+#nndsfkpxlo .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#skseiycdoj .gt_col_headings {
+#nndsfkpxlo .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -493,7 +493,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   border-right-color: #D3D3D3;
 }
 
-#skseiycdoj .gt_col_heading {
+#nndsfkpxlo .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -513,7 +513,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   overflow-x: hidden;
 }
 
-#skseiycdoj .gt_column_spanner_outer {
+#nndsfkpxlo .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -525,15 +525,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   padding-right: 4px;
 }
 
-#skseiycdoj .gt_column_spanner_outer:first-child {
+#nndsfkpxlo .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#skseiycdoj .gt_column_spanner_outer:last-child {
+#nndsfkpxlo .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#skseiycdoj .gt_column_spanner {
+#nndsfkpxlo .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -545,11 +545,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   width: 100%;
 }
 
-#skseiycdoj .gt_spanner_row {
+#nndsfkpxlo .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#skseiycdoj .gt_group_heading {
+#nndsfkpxlo .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -575,7 +575,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   text-align: left;
 }
 
-#skseiycdoj .gt_empty_group_heading {
+#nndsfkpxlo .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -590,15 +590,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   vertical-align: middle;
 }
 
-#skseiycdoj .gt_from_md > :first-child {
+#nndsfkpxlo .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#skseiycdoj .gt_from_md > :last-child {
+#nndsfkpxlo .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#skseiycdoj .gt_row {
+#nndsfkpxlo .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -617,7 +617,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   overflow-x: hidden;
 }
 
-#skseiycdoj .gt_stub {
+#nndsfkpxlo .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -630,7 +630,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   padding-right: 5px;
 }
 
-#skseiycdoj .gt_stub_row_group {
+#nndsfkpxlo .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -644,15 +644,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   vertical-align: top;
 }
 
-#skseiycdoj .gt_row_group_first td {
+#nndsfkpxlo .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#skseiycdoj .gt_row_group_first th {
+#nndsfkpxlo .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#skseiycdoj .gt_summary_row {
+#nndsfkpxlo .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -662,16 +662,16 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   padding-right: 5px;
 }
 
-#skseiycdoj .gt_first_summary_row {
+#nndsfkpxlo .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#skseiycdoj .gt_first_summary_row.thick {
+#nndsfkpxlo .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#skseiycdoj .gt_last_summary_row {
+#nndsfkpxlo .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -681,7 +681,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   border-bottom-color: #D3D3D3;
 }
 
-#skseiycdoj .gt_grand_summary_row {
+#nndsfkpxlo .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -691,7 +691,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   padding-right: 5px;
 }
 
-#skseiycdoj .gt_first_grand_summary_row {
+#nndsfkpxlo .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -701,7 +701,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   border-top-color: #D3D3D3;
 }
 
-#skseiycdoj .gt_last_grand_summary_row_top {
+#nndsfkpxlo .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -711,11 +711,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   border-bottom-color: #D3D3D3;
 }
 
-#skseiycdoj .gt_striped {
+#nndsfkpxlo .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#skseiycdoj .gt_table_body {
+#nndsfkpxlo .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -724,7 +724,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   border-bottom-color: #D3D3D3;
 }
 
-#skseiycdoj .gt_footnotes {
+#nndsfkpxlo .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -738,7 +738,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   border-right-color: #D3D3D3;
 }
 
-#skseiycdoj .gt_footnote {
+#nndsfkpxlo .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -747,7 +747,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   padding-right: 5px;
 }
 
-#skseiycdoj .gt_sourcenotes {
+#nndsfkpxlo .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -761,7 +761,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   border-right-color: #D3D3D3;
 }
 
-#skseiycdoj .gt_sourcenote {
+#nndsfkpxlo .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -769,63 +769,63 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   padding-right: 5px;
 }
 
-#skseiycdoj .gt_left {
+#nndsfkpxlo .gt_left {
   text-align: left;
 }
 
-#skseiycdoj .gt_center {
+#nndsfkpxlo .gt_center {
   text-align: center;
 }
 
-#skseiycdoj .gt_right {
+#nndsfkpxlo .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#skseiycdoj .gt_font_normal {
+#nndsfkpxlo .gt_font_normal {
   font-weight: normal;
 }
 
-#skseiycdoj .gt_font_bold {
+#nndsfkpxlo .gt_font_bold {
   font-weight: bold;
 }
 
-#skseiycdoj .gt_font_italic {
+#nndsfkpxlo .gt_font_italic {
   font-style: italic;
 }
 
-#skseiycdoj .gt_super {
+#nndsfkpxlo .gt_super {
   font-size: 65%;
 }
 
-#skseiycdoj .gt_footnote_marks {
+#nndsfkpxlo .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#skseiycdoj .gt_asterisk {
+#nndsfkpxlo .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#skseiycdoj .gt_indent_1 {
+#nndsfkpxlo .gt_indent_1 {
   text-indent: 5px;
 }
 
-#skseiycdoj .gt_indent_2 {
+#nndsfkpxlo .gt_indent_2 {
   text-indent: 10px;
 }
 
-#skseiycdoj .gt_indent_3 {
+#nndsfkpxlo .gt_indent_3 {
   text-indent: 15px;
 }
 
-#skseiycdoj .gt_indent_4 {
+#nndsfkpxlo .gt_indent_4 {
   text-indent: 20px;
 }
 
-#skseiycdoj .gt_indent_5 {
+#nndsfkpxlo .gt_indent_5 {
   text-indent: 25px;
 }
 </style>

@@ -129,14 +129,14 @@ The following calculation represents the percent of census block groups where le
 
 ```{r}
 #check for NAs, they'll  be removed during filter & will affect total 
-sum(is.na(los_angeles$LOWINCPCT))
+glue::glue('Number of NAs: {sum(is.na(los_angeles$LOWINCPCT))}')
 
 #filter to percent of low income
 low_income <- los_angeles %>% 
   filter(LOWINCPCT < 0.05)
 
 # No NAs, so can divide by total number of rows to find 
-nrow(low_income)/nrow(los_angeles) *100
+glue::glue('5% or less of population is low income: {nrow(low_income)/nrow(los_angeles) *100}')
 ```
 
 Based on this calculation, in Los Angeles, less than 5% of the population is considered low-income in 6.11% of census block groups.
@@ -157,7 +157,7 @@ pm_pnpl_subset <- los_angeles %>%
   filter(P_PM25 > 80 & P_PNPL > 80)
 
 # calculate percentage
-nrow(pm_pnpl_subset)/total2 * 100
+glue::glue('Percent census block groups with P_PM25 and P_PNPL above 80th percentile: {nrow(pm_pnpl_subset)/total2 * 100}')
 ```
 
 In Los Angeles, 17.4% of census block groups are above the 80th percentile for Particulate Matter 2.5 AND Superfund proximity.
