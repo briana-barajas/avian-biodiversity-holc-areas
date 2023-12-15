@@ -44,11 +44,12 @@ Data on bird observations was obtained from the [Global Biodiversity Information
 ### Libraries Used
 
 ```{r, results='hide'}
-library(tidyverse)
-library(stars)
-library(sf)
 library(tmap)
-library(gridExtra)
+library(tidyverse)
+library(sf)
+library(tidyverse)
+library(ggspatial)
+library(gt)
 library(here)
 ```
 
@@ -90,7 +91,9 @@ birds <- st_read(here('data/gbif-birds-LA/gbif-birds-LA.shp')) %>%
 st_crs(birds) == st_crs(la_redlining)
 ```
 
-## Wastewater Discharge in Census Tracts
+## Explore EJScreen Data
+
+**Mapping wastewater discharge in LA County:**
 
 The following map provides an exploratory map to demonstrate information available through EJScreen. The percentile for wastewater discharge by census block groups (`P_PWDIS`) was mapped, and centroids were added to highlight areas above the 95th percentile. Additional data from EJScreen includes air quality, distance to superfund sites, cancer rates, education levels, and more.
 
@@ -100,9 +103,15 @@ centroid_above_95th <- los_angeles %>%
   filter(P_PWDIS > 95) %>%
   st_centroid()
 
-# create bbox to remove CA Channel islands
+# use a bbox to isolate LA
 la_crop <- st_crop(x = los_angeles, y = st_bbox(la_redlining))
 
+# check that crop is a Los Angeles without Channel Islands
+tm_shape(la_crop) +
+  tm_polygons()
+```
+
+```{r}
 # create map
 tm_shape(la_crop) + #using cropped shape to remove islands
   tm_graticules() + #add graticules
@@ -113,3 +122,138 @@ tm_shape(la_crop) + #using cropped shape to remove islands
   tm_compass(type = "arrow", position = c("right", "bottom"), size = 2) +
   tm_scale_bar() 
 ```
+
+**Assess Income Levels:**
+
+The following calculation represents the percent of census block groups where less than 5% of the population is considered low-income. This can be calculated using the `LOWINCPCT` column from the EJScreen data.
+
+```{r}
+#check for NAs, they'll  be removed during filter & will affect total 
+sum(is.na(los_angeles$LOWINCPCT))
+
+#filter to percent of low income
+low_income <- los_angeles %>% 
+  filter(LOWINCPCT < 0.05)
+
+# No NAs, so can divide by total number of rows to find 
+nrow(low_income)/nrow(los_angeles) *100
+```
+
+Based on this calculation, in Los Angeles, less than 5% of the population is considered low-income in 6.11% of census block groups.
+
+**Particulate Matter and Superfund Areas:**
+
+The following calculation estimates the percent of census block groups that are above the 80th percentile for Particulate Matter 2.5, and the 80th percentile for Superfund proximity.
+
+```{r}
+# check for NAs that affect total number of census block groups
+  # use the smaller total in % calc
+total1 <- nrow(los_angeles) - sum(is.na(los_angeles$P_PM25))
+total2 <- nrow(los_angeles) - sum(is.na(los_angeles$P_PNPL))
+
+# subset by applying desired constraints
+  # filter will remove NAs
+pm_pnpl_subset <- los_angeles %>% 
+  filter(P_PM25 > 80 & P_PNPL > 80)
+
+# calculate percentage
+nrow(pm_pnpl_subset)/total2 * 100
+```
+
+In Los Angeles, 17.4% of census block groups are above the 80th percentile for Particulate Matter 2.5 AND Superfund proximity.
+
+## Map HOLC Grades
+
+The following map depicts historical redlining boundaries in Los Angeles. The HOLC ranking system from highest to lowest is as follows:
+
+1.  A - green
+2.  B - blue
+3.  C - yellow
+4.  D - red
+
+Neighborhoods with lower ratings, red and yellow, often exhibit many of the environmental impacts described above.
+
+```{r}
+#create color pallette to match HOLC grades
+my_pal <- c('palegreen3','royalblue3','goldenrod1','firebrick')
+
+# create map of redlining boundaries
+tm_shape(la_crop) + # use cropped shape to remove islands
+  tm_graticules() + #add graticules
+  tm_fill('lightgray') + #place LA shape in background
+  tm_borders(col_alpha = 0.3) + # add semi-transparent borders
+  tm_shape(la_redlining) + # add redlining data
+  tm_fill(fill = "grade", palette=my_pal) + # fill by HOLC grade
+  tm_compass(type = "arrow", position = c("right", "top"), size = 2) +
+  tm_scale_bar()
+```
+
+## Explore HOLC Grade Data
+
+### Census Groups Within HOLC Grades
+
+Both the census data and HOLC-grade data provide geographic information on Los Angeles County. We can calculate present-day census groups within HOLC grades to compare historic redlining to present-day census grouping.
+
+```{r}
+# check both df have the same CRS
+st_crs(los_angeles) == st_crs(la_redlining)
+
+# find number of census block groups within HOLC grades
+redlining_intersections <- st_join(x = los_angeles,
+                                   y = la_redlining,
+                                   join = st_within,
+                                   left = FALSE)
+
+# check number of rows
+glue::glue('Number of Census Groups within HOLC Grades: {nrow(redlining_intersections)}')
+```
+
+### Aggregate EjScreen Data by HOLC Grade
+
+Using both EJScreen data and HOLC grade boundaries, we can examine how different environmental factors are distributed. For this brief assessment, the mean values for the percent of low-income individuals, percentile for particulate Matter 2.5, percentile for low life expectancy, and percentile for air toxics cancer risk were calculated.
+
+```{r}
+#calculate ejscreen data averages 
+redlining_intersections %>% 
+  group_by(grade) %>% 
+  st_drop_geometry() %>% # needed to drop geoms to use gt() table
+  summarise(low_inc_pct = mean(LOWINCPCT, na.rm = TRUE),
+            P_PM_2.5 = mean(P_PM25, na.rm = TRUE),
+            P_low_life_expectancy = mean(P_LIFEEXPPCT, na.rm = TRUE),
+            P_air_cancer_risk = mean(P_CANCER, na.rm = TRUE)) %>%   gt() %>%
+  tab_header("Mean Values by HOLC Grade")
+```
+
+Based on the ranking set by the Home Owners' Loan Corporation (HOLC), the mean values shown above are not surprising. The HOLC ranking system was meant to demonstrate "desirable" areas, and areas with grade "A" have higher average incomes, life expectancy, and air quality. These mean also values demonstrate the consequences of redlining on community health and wealth.
+
+## Bird Observations
+
+Using bird observations from 2022, the percent of observations within neighborhoods with HOLC grades were calculated and plotted below.
+
+```{r}
+# join bird & redlining to find birds w/in HOLC graded neighborhoods
+birds_2022 <- st_join(x = birds,
+                      y = la_redlining,
+                      join = st_within,
+                      left = FALSE)
+
+# Create and store total percent of bird observations to plot
+birds_percent <- birds_2022 %>% 
+  group_by(grade) %>% 
+  st_drop_geometry() %>%
+  summarise(percentage = (n()/nrow(birds_2022))*100)
+
+# plot % bird observations per HOLG grade
+ggplot(birds_percent, aes(x = reorder(grade, percentage),
+                          y = percentage,
+                          fill = grade)) +
+  geom_col() +
+  scale_fill_manual(values = c('palegreen3', 'royalblue3', 'firebrick', 'goldenrod1')) + theme_minimal() +
+  labs(title = "Percent of Total Bird Observations",
+       x = "HOLC Grade",
+       y = "Percentage")
+```
+
+## Conclusion and Limitations
+
+Given the background information, these results were quite surprising. Areas with higher HOLC grades have more green spaces, as well as more people submitting bird observations via birding apps, so I anticipated a higher percentage of bird sightings in areas with HOLC grade A and B. To ensure the percentages were correct, I ran a count of individual columns using `length(which())` and checked that the percent data was correct. I think it would be interesting to counter this with a comparison of biodiversity to see which grades are more species rich. Perhaps there are more sightings in lower grades, but they are generalist/scavenger bird species.
